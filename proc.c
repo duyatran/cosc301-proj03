@@ -464,3 +464,30 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int kern_mprotect(struct proc *p, void *addr, int len) {
+	if ((uint) addr % PGSIZE != 0 || (uint) addr > p->sz 
+		|| len <= 0 || ((uint) addr + PGSIZE*len) > p->sz) {
+		return -1;
+	}
+	int i;
+	for (i = 0; i < len; i++) {
+		do_mprotect(p, addr);
+		addr += PGSIZE;
+	}
+	return 0;
+}
+
+int kern_munprotect(struct proc *p, void* addr, int len) {
+	if ((uint) addr % PGSIZE != 0 || (uint) addr > proc->sz 
+		|| len <= 0 || ((uint) addr + PGSIZE*len) > proc->sz) {
+		return -1;
+	}
+	int i;
+	for (i = 0; i < len; i++) {
+		do_munprotect(p, addr);
+		addr += PGSIZE;
+	}
+	return 0;
+}
+
