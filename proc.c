@@ -475,6 +475,7 @@ int kern_mprotect(struct proc *p, void *addr, int len) {
 		do_mprotect(p, addr);
 		addr += PGSIZE;
 	}
+	lcr3(v2p(p->pgdir));
 	return 0;
 }
 
@@ -488,6 +489,7 @@ int kern_munprotect(struct proc *p, void* addr, int len) {
 		do_munprotect(p, addr);
 		addr += PGSIZE;
 	}
+	lcr3(v2p(p->pgdir));
 	return 0;
 }
 
