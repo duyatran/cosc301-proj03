@@ -1,3 +1,14 @@
+================================================
+Duy Tran & Ha Vu
+Notes about changes:
+- Makefile: user programs starts at virtual page 1 (va 0x1000)
+- exec.c: user virtual memory is allocated and loaded from the second page
+- syscall.c: add condition to check for bad pointers
+- vm.c: copyuvm(), the method used in fork() in copy processes' address spaces, only copies from the first page onwards
+- Changes in all other files are to implement the two system calls mprotect() and munprotect().
+
+================================================
+
 xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix
 Version 6 (v6).  xv6 loosely follows the structure and style of v6,
 but is implemented for a modern x86-based multiprocessor using ANSI C.
