@@ -465,29 +465,20 @@ procdump(void)
   }
 }
 
-int kern_mprotect(struct proc *p, void *addr, int len) {
+int kern_mprotect(struct proc *p, void *addr, int len, int type) {
 	if ((uint) addr % PGSIZE != 0 || (uint) addr > p->sz 
 		|| len <= 0 || ((uint) addr + PGSIZE*len) > p->sz) {
 		return -1;
 	}
 	int i;
-	for (i = 0; i < len; i++) {
-		do_mprotect(p, addr);
-		addr += PGSIZE;
-	}
-	lcr3(v2p(p->pgdir));
-	return 0;
-}
-
-int kern_munprotect(struct proc *p, void* addr, int len) {
-	if ((uint) addr % PGSIZE != 0 || (uint) addr > proc->sz 
-		|| len <= 0 || ((uint) addr + PGSIZE*len) > proc->sz) {
-		return -1;
-	}
-	int i;
-	for (i = 0; i < len; i++) {
-		do_munprotect(p, addr);
-		addr += PGSIZE;
+	for (i = 0; i < len; i++, addr += PGSIZE) {
+		pte_t *pte = do_mprotect(p, addr);
+		if (pte == 0)
+			return -1;
+		if (type == 0)
+			*pte &= ~PTE_W;
+		else
+			*pte |= PTE_W;
 	}
 	lcr3(v2p(p->pgdir));
 	return 0;

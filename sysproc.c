@@ -96,7 +96,7 @@ int sys_mprotect(void) {
 	if(argptr(0, (char**) &addr, 4) < 0 || argint(1, &len) < 0) {
 		return -1;
 	}
-	return kern_mprotect(proc, addr, len);
+	return kern_mprotect(proc, addr, len, 0);
 }
 
 int sys_munprotect(void) {
@@ -105,5 +105,5 @@ int sys_munprotect(void) {
 	if(argptr(0, (char**) &addr, 4) < 0 || argint(1, &len) < 0) {
 		return -1;
 	}
-	return kern_munprotect(proc, addr, len);
+	return kern_mprotect(proc, addr, len, 1);
 }

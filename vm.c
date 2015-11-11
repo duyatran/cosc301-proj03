@@ -377,21 +377,10 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
   return 0;
 }
 
-void do_mprotect(struct proc *p, void *addr) {
+pte_t *do_mprotect(struct proc *p, void *addr) {
 	pte_t *pte = walkpgdir(p->pgdir, addr, 0);
-	if (pte == 0)
-		panic("kern_munprotect");
-	*pte &= ~PTE_W;
+	return pte;
 }
-
-void do_munprotect(struct proc *p, void *addr) {
-	pte_t *pte = walkpgdir(p->pgdir, addr, 0);
-	if (pte == 0)
-		panic("kern_munprotect");
-	*pte |= PTE_W;
-}
-
-
 
 //PAGEBREAK!
 // Blank page.
